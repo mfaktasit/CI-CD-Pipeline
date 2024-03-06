@@ -49,26 +49,23 @@ pipeline {
             }
         }
 
-        stage("Build & Push Docker Image") {
+        stage('Build App Docker Image') {
             steps {
-                script {
-                    // Retrieve DockerHub token from Jenkins credentials
-                    withCredentials([string(credentialsId:'DeliToken', variable: 'DOCKERHUB_TOKEN')]) {
-                        def dockerRegistryUrl = 'https://index.docker.io/v1/'
-
-                        // Build the Docker image
-                        docker.withRegistry(dockerRegistryUrl, DOCKERHUB_TOKEN) {
-                            docker_image = docker.build "${IMAGE_NAME}:${IMAGE_TAG}"
-                        }
-
-                        // Push the Docker image to DockerHub
-                        docker.withRegistry(dockerRegistryUrl, DOCKERHUB_TOKEN) {
-                            docker_image.push()
-                            docker_image.push('latest')
-                        }
-                    }
-                }
+                echo 'Building App Image'                
+                sh 'docker build --force-rm -t "$IMAGE_NAME" -f ./Dockerfile .'
+                sh 'docker image ls'
             }
+       }
+
+        stage('Push Image to Dockerhub Repo') {
+            steps {
+                echo 'Pushing App Image to DockerHub Repo'
+                withCredentials([string(credentialsId: 'DeliToken', variable: 'DOCKERHUB_TOKEN')]) {
+                sh 'docker login -u $DOCKER_USER -p $DOCKERHUB_TOKEN'
+                sh 'docker push "$IMAGE_NAME"'
+                
+            }
+          }
         }
 
         stage("Trivy Scan") {

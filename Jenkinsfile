@@ -80,7 +80,6 @@ pipeline {
             steps {
                 script {
                     sh "docker rmi ${IMAGE_NAME}"
-                    sh "docker rmi ${IMAGE_NAME}"
                 }
             }
         }

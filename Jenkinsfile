@@ -14,6 +14,7 @@ pipeline {
         IMAGE_NAME = "${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
         JENKINS_API_TOKEN = credentials("JENKINS_API_TOKEN")
+        JAVA_HOME = tool 'Java17'
     }
 
     stages {
@@ -100,16 +101,16 @@ pipeline {
         }
     }
 
-    // post {
-    //     failure {
-    //         emailext body: '${SCRIPT, template="groovy-html.template"}',
-    //                 subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failed",
-    //                 mimeType: 'text/html', to: "mfaktasit@gmail.com"
-    //     }
-    //     success {
-    //         emailext body: '${SCRIPT, template="groovy-html.template"}',
-    //                 subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Successful",
-    //                 mimeType: 'text/html', to: "mfaktasit@gmail.com"
-    //     }
-    // }
+    post {
+        failure {
+            emailext body: '${SCRIPT, template="groovy-html.template"}',
+                    subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failed",
+                    mimeType: 'text/html', to: "mfaktasit@gmail.com"
+        }
+        success {
+            emailext body: '${SCRIPT, template="groovy-html.template"}',
+                    subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Successful",
+                    mimeType: 'text/html', to: "mfaktasit@gmail.com"
+        }
+    }
 }

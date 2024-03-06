@@ -53,7 +53,7 @@ pipeline {
             steps {
                 script {
                     // Retrieve DockerHub token from Jenkins credentials
-                    withCredentials([string(credentialsId: 'DeliToken', variable: 'DOCKERHUB_TOKEN')]) {
+                    withCredentials([string(credentialsId:'DeliToken', variable: 'DOCKERHUB_TOKEN')]) {
                         def dockerRegistryUrl = 'https://index.docker.io/v1/'
 
                         // Build the Docker image

@@ -109,7 +109,7 @@ post {
                     </body>
                     </html>''',
             to: 'mfaktasit@gmail.com',
-            from: 'mfaktasit@gmail.com',
+            from: 'jenkins@noreplay',
             replyTo: 'mfaktasit@gmail.com',
             mimeType: 'text/html'
         )

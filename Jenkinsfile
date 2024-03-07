@@ -97,16 +97,22 @@ pipeline {
         }
     }
 
-    post {
-        failure {
-            emailext body: '${SCRIPT, template="groovy-html.template"}',
-                    subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Failed",
-                    mimeType: 'text/html', to: "mfaktasit@gmail.com"
-        }
-        success {
-            emailext body: '${SCRIPT, template="groovy-html.template"}',
-                    subject: "${env.JOB_NAME} - Build # ${env.BUILD_NUMBER} - Successful",
-                    mimeType: 'text/html', to: "mfaktasit@gmail.com"
+post {
+    always {
+        emailext (
+            subject: "Pipeline Status: ${currentBuild.result}",
+            body: '''<html>
+                    <body>
+                    <p>Build Status: ${currentBuild.result}</p>
+                    <p>Build Number: ${currentBuild.number}</p>
+                    <p>Check the <a href="${env.BUILD_URL}">console output</a>.</p>
+                    </body>
+                    </html>''',
+            to: 'mfaktasit@gmail.com',
+            from: 'mfaktasit@gmail.com',
+            replyTo: 'mfaktasit@gmail.com',
+            mimeType: 'text/html'
+        )
         }
     }
 }
